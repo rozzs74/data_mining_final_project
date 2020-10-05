@@ -93,15 +93,15 @@ PARAMS <- get_train_control_params()
 METRIC <- PARAMS$metric
 train_control <- get_train_control(PARAMS$method, PARAMS$number,PARAMS$repeats)
 
-index <- createDataPartition(DS$Class, p=0.80, list=FALSE)
-trainData <- GermanCredit[index,]
-testData <- GermanCredit[-index,]
+index <- create_partition(DS$Class, 0.80,FALSE)
+trainData <- DS[index,]
+testData <- DS[-index,]
 
 
 # Logistic Regression
 run_lgr_model <- function (trainData, testData, metric, train_control) {
 	generate_seed(7)
-	model.lgr <- train_model(trainData, "glm", train_control, METRIC)
+	model.lgr <- train_model(trainData, "glm", train_control, metric)
 	model.lgr
 	model.lgr.final <- model.lgr$finalModel
 	model.lgr.final
@@ -112,12 +112,21 @@ run_lgr_model <- function (trainData, testData, metric, train_control) {
 start.time <- Sys.time()
 run_lgr_model(trainData, testData, METRIC, train_control)
 end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken
+
 
 # Random Forest 
-
 run_rf_model <- function (trainData, testData, metric, train_control) {
 	generate_seed(7)	
-	model.rf <- train_model(trainData)
+	model.rf <- train_model(trainData, "rf", train_control, metric)
+	model.rf
+	model.rf.final <- model.rf$finalModel
+	predictions <- predict(model.rf.final, testData)
+	head(predictions)
+	confusionMatrix(predictions, testData$Class)
 }
+
+start.time <- Sys.time()
+run_rf_model(trainData, testData, METRIC, train_control)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
