@@ -98,56 +98,74 @@ index <- create_partition(DS$Class, 0.80, FALSE)
 trainData <- DS[index,]
 testData <- DS[-index,]
 
-# Logistic Regression
-run_lgr_model <- function (trainData, testData, metric, train_control) {
-	generate_seed(7)
-	model.lgr <- train_model(trainData, "glm", train_control, metric)
-	model.lgr
-    summary(model.lgr)
-	model.lgr.final <- model.lgr$finalModel
-	probabilities <- predict(model.lgr.final, data=testData, type="response")
-	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
-	head(predictions)
-}
-start.time <- Sys.time()
-run_lgr_model(trainData, testData, METRIC, train_control)
-end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken
+# # Logistic Regression
+# run_lgr_model <- function (trainData, testData, metric, train_control) {
+# 	generate_seed(7)
+# 	model.lgr <- train_model(trainData, "glm", train_control, metric)
+# 	model.lgr
+#     summary(model.lgr)
+# 	model.lgr.final <- model.lgr$finalModel
+# 	probabilities <- predict(model.lgr.final, data=testData, type="response")
+# 	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
+# 	head(predictions)
+# }
+# start.time <- Sys.time()
+# run_lgr_model(trainData, testData, METRIC, train_control)
+# end.time <- Sys.time()
+# time.taken <- end.time - start.time
+# time.taken
 
-# Random Forest 
-run_rf_model <- function (trainData, testData, metric, train_control) {
-	generate_seed(7)	
-	model.rf <- train_model(trainData, "rf", train_control, metric)
-	model.rf
-	summary(model.rf)
-	model.rf.final <- model.rf$finalModel
-	predictions <- predict(model.rf.final, testData)
-	head(predictions)
-	confusionMatrix(predictions, testData$Class)
-}
+# # Random Forest 
+# run_rf_model <- function (trainData, testData, metric, train_control) {
+# 	generate_seed(7)	
+# 	model.rf <- train_model(trainData, "rf", train_control, metric)
+# 	model.rf
+# 	summary(model.rf)
+# 	model.rf.final <- model.rf$finalModel
+# 	predictions <- predict(model.rf, testData)
+# 	head(predictions)
+# 	confusionMatrix(predictions, testData$Class)
+# }
 
-start.time <- Sys.time()
-run_rf_model(trainData, testData, METRIC, train_control)
-end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken
+# start.time <- Sys.time()
+# run_rf_model(trainData, testData, METRIC, train_control)
+# end.time <- Sys.time()
+# time.taken <- end.time - start.time
+# time.taken
 
 
-# Naive Bayes
-run_nb_model <- function(trainData, testData, metric, train_control) {
-	generate_seed(7)
-	model.nb <- train(Class~Duration+Amount+ResidenceDuration+Age, data=trainData, method="nb", trControl=train_control)
-	model.nb
-	summary(model.nb)
-	model.nb.final <- model.nb$finalModel
-	predictions <- predict(model.nb.final, testData)
-	head(predictions)
-}
+# # Naive Bayes
+# run_nb_model <- function(trainData, testData, metric, train_control) {
+# 	generate_seed(7)
+# 	model.nb <- train(Class~Amount+Age, data=trainData, method="nb", trControl=train_control)
+# 	model.nb
+# 	summary(model.nb)
+# 	model.nb.final <- model.nb$finalModel
+# 	predictions <- predict(model.nb, testData)
+# 	head(predictions)
+# }
 
-start.time <- Sys.time()
-run_nb_model(trainData, testData, METRIC, train_control)
-end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken
+# start.time <- Sys.time()
+# run_nb_model(trainData, testData, METRIC, train_control)
+# end.time <- Sys.time()
+# time.taken <- end.time - start.time
+# time.taken
+
+
+# run_svm_model <- function(trainData, testData, metric, train_control) {
+# 	generate_seed(7)
+# 	model.svm <- train_model(trainData, "svmRadial", train_control, metric)
+# 	model.svm
+# 	summary(model.svm)
+# 	model.svm.final <- model.svm$finalModel
+# 	model.svm.final
+# 	predictions <- predict(model.svm, testData)
+# 	head(predictions)
+# }
+
+# start.time <- Sys.time()
+# run_svm_model(trainData, testData, METRIC, train_control)
+# end.time <- Sys.time()
+# time.taken <- end.time - start.time
+# time.taken
 
