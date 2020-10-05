@@ -97,12 +97,18 @@ index <- createDataPartition(DS$Class, p=0.80, list=FALSE)
 trainData <- GermanCredit[index,]
 testData <- GermanCredit[-index,]
 
+
 # Logistic Regression
-generate_seed(7)
-model.lgr <- train_model(trainData, "glm", train_control, METRIC)
-model.lgr
-model.lgr.final <- model.lgr$finalModel
-model.lgr.final
-probabilities <- predict(model.lgr.final, data=testData, type="response")
-predictions <- ifelse(probabilities > 0.5,'Good','Bad')
-head(predictions)
+run_lgr_model <- function (trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.lgr <- train_model(trainData, "glm", train_control, METRIC)
+	model.lgr
+	model.lgr.final <- model.lgr$finalModel
+	model.lgr.final
+	probabilities <- predict(model.lgr.final, data=testData, type="response")
+	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
+	head(predictions)
+}
+
+run_lgr_model(trainData, testData, METRIC, train_control)
+
