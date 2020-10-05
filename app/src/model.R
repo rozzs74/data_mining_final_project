@@ -26,6 +26,11 @@ train_model <- function(data, method, train_control, metric) {
     return(model)
 }
 
+make_predictions <- function(model, data) {
+	p <- predict(model, data)
+	return(p)
+}
+
 create_partition <- function(data, p, list) {
 	rs <- createDataPartition(data, p=p, list=list)
 	return(rs)
@@ -99,73 +104,117 @@ trainData <- DS[index,]
 testData <- DS[-index,]
 
 # # Logistic Regression
-# run_lgr_model <- function (trainData, testData, metric, train_control) {
-# 	generate_seed(7)
-# 	model.lgr <- train_model(trainData, "glm", train_control, metric)
-# 	model.lgr
-#     summary(model.lgr)
-# 	model.lgr.final <- model.lgr$finalModel
-# 	probabilities <- predict(model.lgr.final, data=testData, type="response")
-# 	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
-# 	head(predictions)
-# }
+run_lgr_model <- function (trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.lgr <- train_model(trainData, "glm", train_control, metric)
+	model.lgr
+    summary(model.lgr)
+	model.lgr.final <- model.lgr$finalModel
+	probabilities <- predict(model.lgr.final, testData, type="response")
+	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
+	head(predictions)
+	return(model.lgr)
+}
+# # start.time <- Sys.time()
+logistic_regression_model <- run_lgr_model(trainData, testData, METRIC, train_control)
+# # end.time <- Sys.time()
+# # time.taken <- end.time - start.time
+# # time.taken
+
+# Random Forest 
+run_rf_model <- function (trainData, testData, metric, train_control) {
+	generate_seed(7)	
+	model.rf <- train_model(trainData, "rf", train_control, metric)
+	model.rf
+	summary(model.rf)
+	model.rf.final <- model.rf$finalModel
+	predictions <- make_predictions(model.rf, testData)
+	head(predictions)
+	confusionMatrix(predictions, testData$Class)
+	return(model.rf)
+}
+
+# # start.time <- Sys.time()
+random_forest_model <- run_rf_model(trainData, testData, METRIC, train_control)
+# # end.time <- Sys.time()
+# # time.taken <- end.time - start.time
+# # time.taken
+
+
+# Naive Bayes
+run_nb_model <- function(trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.nb <- train(Class~Amount+Age, data=trainData, method="nb", trControl=train_control)
+	model.nb
+	summary(model.nb)
+	model.nb.final <- model.nb$finalModel
+	predictions <- make_predictions(model.nb, testData)
+	head(predictions)
+	return(model.nb)
+}
+
 # start.time <- Sys.time()
-# run_lgr_model(trainData, testData, METRIC, train_control)
+naive_bayes_model <- run_nb_model(trainData, testData, METRIC, train_control)
 # end.time <- Sys.time()
 # time.taken <- end.time - start.time
 # time.taken
 
-# # Random Forest 
-# run_rf_model <- function (trainData, testData, metric, train_control) {
-# 	generate_seed(7)	
-# 	model.rf <- train_model(trainData, "rf", train_control, metric)
-# 	model.rf
-# 	summary(model.rf)
-# 	model.rf.final <- model.rf$finalModel
-# 	predictions <- predict(model.rf, testData)
-# 	head(predictions)
-# 	confusionMatrix(predictions, testData$Class)
-# }
+#SVM
+run_svm_model <- function(trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.svm <- train_model(trainData, "svmRadial", train_control, metric)
+	model.svm
+	summary(model.svm)
+	model.svm.final <- model.svm$finalModel
+	model.svm.final
+	predictions <- make_predictions(model.svm, testData)
+	head(predictions)
+	confusionMatrix(predictions, testData$Class)
+	return(model.svm)
+}
 
 # start.time <- Sys.time()
-# run_rf_model(trainData, testData, METRIC, train_control)
+super_vector_machine_model <- run_svm_model(trainData, testData, METRIC, train_control)
 # end.time <- Sys.time()
 # time.taken <- end.time - start.time
 # time.taken
 
 
-# # Naive Bayes
-# run_nb_model <- function(trainData, testData, metric, train_control) {
-# 	generate_seed(7)
-# 	model.nb <- train(Class~Amount+Age, data=trainData, method="nb", trControl=train_control)
-# 	model.nb
-# 	summary(model.nb)
-# 	model.nb.final <- model.nb$finalModel
-# 	predictions <- predict(model.nb, testData)
-# 	head(predictions)
-# }
-
+#CART
+run_cart_model <- function(trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.cart <- train_model(trainData, "rpart", train_control, metric)
+	# model.cart
+	# summary(model.cart)
+	model.cart.final <- model.cart$finalModel
+	predictions <- make_predictions(model.cart, testData)
+	head(predictions)
+	confusionMatrix(predictions, testData$Class)
+	return(model.cart)
+}
 # start.time <- Sys.time()
-# run_nb_model(trainData, testData, METRIC, train_control)
+cart_model <- run_cart_model(trainData, testData, METRIC, train_control)
 # end.time <- Sys.time()
 # time.taken <- end.time - start.time
 # time.taken
 
-
-# run_svm_model <- function(trainData, testData, metric, train_control) {
-# 	generate_seed(7)
-# 	model.svm <- train_model(trainData, "svmRadial", train_control, metric)
-# 	model.svm
-# 	summary(model.svm)
-# 	model.svm.final <- model.svm$finalModel
-# 	model.svm.final
-# 	predictions <- predict(model.svm, testData)
-# 	head(predictions)
-# }
+run_knn_model <- function(trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.knn <- train_model(trainData, "knn", train_control, metric)
+	# model.knn
+	# summary(model.knn)
+	model.knn.final <- model.knn$finalModel
+	predictions <- make_predictions(model.knn, testData)
+	head(predictions)
+	confusionMatrix(predictions, testData$Class)
+	return(model.knn)
+}
 
 # start.time <- Sys.time()
-# run_svm_model(trainData, testData, METRIC, train_control)
+knn_model <- run_knn_model(trainData, testData, METRIC, train_control)
 # end.time <- Sys.time()
 # time.taken <- end.time - start.time
 # time.taken
 
+results <- resamples(list(LGR=logistic_regression_model,RF=random_forest_model, NB=naive_bayes_model, SVM=super_vector_machine_model, CART=cart_model,KNN=knn_model))
+summary(results)
