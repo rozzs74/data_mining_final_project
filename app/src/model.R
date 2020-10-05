@@ -11,8 +11,9 @@ generate_seed <- function(n) {
     return(TRUE)
 }
 
-get_train_control <- function(type, no_fold, no_repeats, search_method) {
-    control <- trainControl(method=type, number=no_fold, repeats=no_repeats, search=search_method) 
+
+get_train_control <- function(type, no_fold, no_repeats) {
+    control <- trainControl(method=type, number=no_fold, repeats=no_repeats) 
     return(control)
 }
 
@@ -20,12 +21,15 @@ get_train_control_params <- function() {
 	return(list(metric="Accuracy", number=10, method="repeatedcv", repeats=3))
 }
 
-train_model <- function(type, control, data_sets, metric, tuneGrid) {
-    # model <- train(Class~., data=data_sets, method=type, trControl=control, metric=metric, tuneGrid=tuneGrid)
-	model <- NULL
+train_model <- function(data, method, train_control, metric) {
+    model <- train(Class~., data=data, method=method, trControl=train_control, metric=metric)
     return(model)
 }
 
+create_partition <- function(data, p, list) {
+	rs <- createDataPartition(data, p=p, list=list)
+	return(rs)
+}
 save_model <- function (model, path) {
 	saveRDS(finalModel, path)
 	return(TRUE)
@@ -79,8 +83,26 @@ get_statistical_significance <- function(data) {
 }
 
 
-ds <- GermanCredit
-dim(ds)
-names(ds)
-str(ds)
-sapply(ds, class)
+DS <- GermanCredit
+# dim(DS)
+# names(DS)
+# str(DS)
+# sapply(DS, class)
+
+PARAMS <- get_train_control_params()
+METRIC <- PARAMS$metric
+train_control <- get_train_control(PARAMS$method, PARAMS$number,PARAMS$repeats)
+
+index <- createDataPartition(DS$Class, p=0.80, list=FALSE)
+trainData <- GermanCredit[index,]
+testData <- GermanCredit[-index,]
+
+# Logistic Regression
+generate_seed(7)
+model.lgr <- train_model(trainData, "glm", train_control, METRIC)
+model.lgr
+model.lgr.final <- model.lgr$finalModel
+model.lgr.final
+probabilities <- predict(model.lgr.final, data=testData, type="response")
+predictions <- ifelse(probabilities > 0.5,'Good','Bad')
+head(predictions)
