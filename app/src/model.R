@@ -109,6 +109,15 @@ run_lgr_model <- function (trainData, testData, metric, train_control) {
 	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
 	head(predictions)
 }
-
+start.time <- Sys.time()
 run_lgr_model(trainData, testData, METRIC, train_control)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
 
+# Random Forest 
+
+run_rf_model <- function (trainData, testData, metric, train_control) {
+	generate_seed(7)	
+	model.rf <- train_model(trainData)
+}
