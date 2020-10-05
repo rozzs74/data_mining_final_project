@@ -93,18 +93,18 @@ PARAMS <- get_train_control_params()
 METRIC <- PARAMS$metric
 train_control <- get_train_control(PARAMS$method, PARAMS$number,PARAMS$repeats)
 
-index <- create_partition(DS$Class, 0.80,FALSE)
+generate_seed(7)	
+index <- create_partition(DS$Class, 0.80, FALSE)
 trainData <- DS[index,]
 testData <- DS[-index,]
-
 
 # Logistic Regression
 run_lgr_model <- function (trainData, testData, metric, train_control) {
 	generate_seed(7)
 	model.lgr <- train_model(trainData, "glm", train_control, metric)
 	model.lgr
+    summary(model.lgr)
 	model.lgr.final <- model.lgr$finalModel
-	model.lgr.final
 	probabilities <- predict(model.lgr.final, data=testData, type="response")
 	predictions <- ifelse(probabilities > 0.5,'Good','Bad')
 	head(predictions)
@@ -112,13 +112,15 @@ run_lgr_model <- function (trainData, testData, metric, train_control) {
 start.time <- Sys.time()
 run_lgr_model(trainData, testData, METRIC, train_control)
 end.time <- Sys.time()
-
+time.taken <- end.time - start.time
+time.taken
 
 # Random Forest 
 run_rf_model <- function (trainData, testData, metric, train_control) {
 	generate_seed(7)	
 	model.rf <- train_model(trainData, "rf", train_control, metric)
 	model.rf
+	summary(model.rf)
 	model.rf.final <- model.rf$finalModel
 	predictions <- predict(model.rf.final, testData)
 	head(predictions)
@@ -130,3 +132,22 @@ run_rf_model(trainData, testData, METRIC, train_control)
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 time.taken
+
+
+# Naive Bayes
+run_nb_model <- function(trainData, testData, metric, train_control) {
+	generate_seed(7)
+	model.nb <- train(Class~Duration+Amount+ResidenceDuration+Age, data=trainData, method="nb", trControl=train_control)
+	model.nb
+	summary(model.nb)
+	model.nb.final <- model.nb$finalModel
+	predictions <- predict(model.nb.final, testData)
+	head(predictions)
+}
+
+start.time <- Sys.time()
+run_nb_model(trainData, testData, METRIC, train_control)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+
