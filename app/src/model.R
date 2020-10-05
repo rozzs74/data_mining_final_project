@@ -4,6 +4,8 @@ library(doMC)
 
 registerDoMC(cores=8)
 
+data(GermanCredit)
+
 generate_seed <- function(n) {
     set.seed(n)
     return(TRUE)
@@ -76,3 +78,9 @@ get_statistical_significance <- function(data) {
     return(TRUE)
 }
 
+
+ds <- GermanCredit
+dim(ds)
+names(ds)
+str(ds)
+sapply(ds, class)
