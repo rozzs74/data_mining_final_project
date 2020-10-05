@@ -1,6 +1,8 @@
 library(mlbench)
 library(caret)
+library(doMC)
 
+registerDoMC(cores=8)
 
 generate_seed <- function(n) {
     set.seed(n)
@@ -12,10 +14,24 @@ get_train_control <- function(type, no_fold, no_repeats, search_method) {
     return(control)
 }
 
+get_train_control_params <- function() {
+	return(list(metric="Accuracy", number=10, method="repeatedcv", repeats=3))
+}
+
 train_model <- function(type, control, data_sets, metric, tuneGrid) {
     # model <- train(Class~., data=data_sets, method=type, trControl=control, metric=metric, tuneGrid=tuneGrid)
 	model <- NULL
     return(model)
+}
+
+save_model <- function (model, path) {
+	saveRDS(finalModel, path)
+	return(TRUE)
+}
+
+load_model <- function(path) {
+	superModel <- readRDS(path)
+	return(TRUE)
 }
 
 plot_normal <- function(data) {
@@ -53,7 +69,6 @@ plot_pairwise_xy <- function(data, models) {
     xyplot(data, models=models)
     return(TRUE)
 }
-
 
 get_statistical_significance <- function(data) {
     diffs <- diff(data)
