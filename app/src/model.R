@@ -84,12 +84,18 @@ plot_pie <- function(x, y, title) {
 	legend("topright",y, cex = 0.8,fill = colors)
 }
 
+plot_bar <- function(x, y, title) {
+	colors = c('#4286f4','#bb3af2','#ed2f52','#efc023','#ea7441', '#000000')
+	barplot(x, col=colors ,main=title, xlab="Models", ylab = "Time Execution (Seconds)")
+	legend("topright",y, cex = 0.8,fill = colors)
+	grid(col = "lightgray", lty = "dotted")
+}
+
 get_statistical_significance <- function(data) {
     diffs <- diff(data)
     summary(diffs)
     return(TRUE)
 }
-
 
 DS <- GermanCredit
 # dim(DS)
@@ -258,4 +264,5 @@ x <- c(x, time.taken)
 # # plot_scatter_matrix(results)
 
 # plot_pairwise_xy(results, c=("LGR", "RF"))
-plot_pie(x, labels, "Time execution in seconds")
+# plot_pie(x, labels, "Time execution in seconds")
+# plot_bar(x, labels, "Model Performance")
