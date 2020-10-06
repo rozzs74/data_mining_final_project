@@ -50,41 +50,34 @@ plot_normal <- function(data) {
     return(TRUE)
 }
 
-plot_dot <- function (data) {
-    dotplot(data)
-    return(TRUE)
+plot_bw <- function(data, options) {
+    bwplot(data, scales=options)
+}
+
+plot_dot <- function (data, options) {
+    dotplot(data, scales=options)
 }
 
 plot_density <- function(data, options) {
     densityplot(data, scales=options, pch="|")
-    return(TRUE)
 }
 
-plot_dot <- function(data, options) {
-    dotplot(data, scales=options)
-	return(TRUE)
-}
 
 plot_parallel <- function(data) {
     parallelplot(data)
-    return(TRUE)
 }
 
 plot_scatter_matrix <- function(data) {
     splom(data)
-    return(TRUE)
 }
 
-
 plot_pairwise_xy <- function(data, models) {
-    xyplot(data, models=models)
-    return(TRUE)
+	xyplot(data, models=models))
 }
 
 get_statistical_significance <- function(data) {
     diffs <- diff(data)
     summary(diffs)
-    return(TRUE)
 }
 
 
@@ -218,3 +211,17 @@ knn_model <- run_knn_model(trainData, testData, METRIC, train_control)
 
 results <- resamples(list(LGR=logistic_regression_model,RF=random_forest_model, NB=naive_bayes_model, SVM=super_vector_machine_model, CART=cart_model,KNN=knn_model))
 summary(results)
+
+
+scales <- list(x=list(relation="free"), y=list(relation="free"))
+plot_bw(results, scales)
+plot_density(results, scales)
+plot_dot(results, scales)
+
+plot_parallel(results)
+
+plot_scatter_matrix(results)
+
+plot_pairwise_xy(results, c=("LGR", "RF"))
+
+get_statistical_significance(results)
