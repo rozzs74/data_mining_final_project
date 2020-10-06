@@ -1,6 +1,7 @@
 library(mlbench)
 library(caret)
 library(doMC)
+library(tidyverse)
 
 registerDoMC(cores=8)
 
@@ -72,12 +73,13 @@ plot_scatter_matrix <- function(data) {
 }
 
 plot_pairwise_xy <- function(data, models) {
-	xyplot(data, models=models)
+    xyplot(data, models=models)
 }
 
 get_statistical_significance <- function(data) {
     diffs <- diff(data)
     summary(diffs)
+    return(TRUE)
 }
 
 
@@ -87,6 +89,17 @@ DS <- GermanCredit
 # str(DS)
 # sapply(DS, class)
 
+#setwd("C:/Users/oanonuevo/Desktop/TIP/Submissions")
+#DS <- read.csv("jm1.csv", na.strings = c("", " "), stringsAsFactors = FALSE)
+# remove 5 rows with "??? value
+#DS <- DS %>% filter(uniq_Op != "?")
+
+#change to numeric value
+#DS[, 17:21] <- lapply(DS[,17:21], as.numeric)
+#DS$defects <- as.factor(DS$defects)
+
+#check nulls
+#colSums(is.na(DS))
 PARAMS <- get_train_control_params()
 METRIC <- PARAMS$metric
 train_control <- get_train_control(PARAMS$method, PARAMS$number,PARAMS$repeats)
@@ -214,14 +227,12 @@ summary(results)
 
 
 scales <- list(x=list(relation="free"), y=list(relation="free"))
-plot_bw(results, scales)
-plot_density(results, scales)
-plot_dot(results, scales)
+# plot_bw(results, scales)
+# plot_density(results, scales)
+# plot_dot(results, scales)
 
-plot_parallel(results)
+# plot_parallel(results)
 
-plot_scatter_matrix(results)
+# plot_scatter_matrix(results)
 
 plot_pairwise_xy(results, c=("LGR", "RF"))
-
-get_statistical_significance(results)
