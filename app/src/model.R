@@ -258,4 +258,4 @@ x <- c(x, time.taken)
 # # plot_scatter_matrix(results)
 
 # plot_pairwise_xy(results, c=("LGR", "RF"))
-plot_pie(x, labels, "Time Execution")
+plot_pie(x, labels, "Time execution in seconds")
