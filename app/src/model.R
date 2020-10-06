@@ -1,7 +1,6 @@
 library(mlbench)
 library(caret)
 library(doMC)
-library(tidyverse)
 
 registerDoMC(cores=8)
 
@@ -73,7 +72,7 @@ plot_scatter_matrix <- function(data) {
 }
 
 plot_pairwise_xy <- function(data, models) {
-	xyplot(data, models=models))
+	xyplot(data, models=models)
 }
 
 get_statistical_significance <- function(data) {
@@ -87,19 +86,6 @@ DS <- GermanCredit
 # names(DS)
 # str(DS)
 # sapply(DS, class)
-
-#setwd("C:/Users/oanonuevo/Desktop/TIP/Submissions")
-#DS <- read.csv("jm1.csv", na.strings = c("", " "), stringsAsFactors = FALSE)
-# remove 5 rows with "??? value
-#DS <- DS %>% filter(uniq_Op != "?")
-
-#change to numeric value
-#DS[, 17:21] <- lapply(DS[,17:21], as.numeric)
-#DS$defects <- as.factor(DS$defects)
-
-#check nulls
-#colSums(is.na(DS))
-
 
 PARAMS <- get_train_control_params()
 METRIC <- PARAMS$metric
