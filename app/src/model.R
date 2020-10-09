@@ -251,6 +251,7 @@ time.taken <- round(end.time - start.time, 2)
 x <- c(x, time.taken)
 
 # results <- resamples(list(LGR=logistic_regression_model,RF=random_forest_model, NB=naive_bayes_model, SVM=super_vector_machine_model, CART=cart_model,KNN=knn_model))
+# results
 # summary(results)
 
 
@@ -266,3 +267,4 @@ x <- c(x, time.taken)
 # plot_pairwise_xy(results, c=("LGR", "RF"))
 # plot_pie(x, labels, "Time execution in seconds")
 # plot_bar(x, labels, "Model Performance")
+xyplot(Amount ~ Age | Purpose.Business,GermanCredit , grid=TRUE, group=Class, auto.key=list(points=FALSE, rectangles=TRUE, space="right"), main="Amount vs Business Purpose")
